@@ -18,10 +18,27 @@ This repo trains a [LoRA](https://arxiv.org/abs/2106.09685) adapter for `runwaym
 
 ## Quick Start
 
-### 1. Create the Environment
+### Create the Environment
 
 ```bash
 python3 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
+
+git clone https://github.com/huggingface/diffusers.git
+cd diffusers
+pip install -e .  # Optional, installs editable version
+```
+
+### Train
+
+```
+bin/train.sh
+```
+
+### Generate
+
+```
+python bin/generate.py
+```
 
