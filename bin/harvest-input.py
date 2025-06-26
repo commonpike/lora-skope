@@ -4,11 +4,8 @@ from pathlib import Path
 from random import randint
 
 input_folders = [
-	"/Volumes/archive/public/pike/graphics/2020/processing",
-    "/Volumes/archive/public/pike/graphics/2021",
-	"/Volumes/archive/public/pike/graphics/2022",
-	"/Volumes/archive/public/pike/graphics/2023",
-	"/Volumes/archive/public/pike/graphics/2024",
+    "folder1",
+    "folder2"
 ]
 
 dirname = os.path.dirname(__file__)
