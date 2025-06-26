@@ -33,6 +33,10 @@ Licensed under the LLaMA-style Community License:
 ```bash
 python3 -m venv env
 source env/bin/activate
+# optional: install pip
+curl https://bootstrap.pypa.io/get-pip.py -o bin/get-pip.py
+python bin/get-pip.py
+# let pip install requirements
 pip install -r requirements.txt
 
 git clone https://github.com/huggingface/diffusers.git
