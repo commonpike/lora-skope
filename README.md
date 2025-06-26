@@ -31,11 +31,14 @@ Licensed under the LLaMA-style Community License:
 ### Create the Environment
 
 ```bash
-python3 -m venv env
-source env/bin/activate
+# set up virtual environment
+python3 -m venv lora-env
+source lora-env/bin/activate
+
 # optional: install pip
 curl https://bootstrap.pypa.io/get-pip.py -o bin/get-pip.py
 python bin/get-pip.py
+
 # let pip install requirements
 pip install -r requirements.txt
 
@@ -47,12 +50,18 @@ pip install -e .  # Optional, installs editable version
 ### Train
 
 ```
+source lora-env/bin/activate
 bin/train.sh
 ```
 
 ### Generate
 
 ```
-python bin/generate.py
+source lora-env/bin/activate
+python3 bin/generate.py
 ```
+
+### Notes
+
+- If you move the repo around, you have to rebuild the env; that's just python.
 
