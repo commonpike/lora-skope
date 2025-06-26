@@ -8,6 +8,8 @@ echo "Input data: $INPUTDIR"
 TRAINDIR="$BASEDIR/model"
 echo "Training destination: $TRAINDIR"
 
+rm -f $INPUTDIR/.gitkeep
+
 CHECKPOINTS=$(ls -d $TRAINDIR/checkpoint-* 2>/dev/null)
 if [ -n "$CHECKPOINTS" ]; then
   echo "Checkpoints found, resuming from latest."
@@ -37,3 +39,5 @@ accelerate launch diffusers/examples/dreambooth/train_dreambooth_lora.py \
 #  --max_train_steps=800 \
 #  --enable_xformers_memory_efficient_attention \ # fails on m1
 #  --mixed_precision="fp16" \ #not on apple gpu
+
+touch $INPUTDIR/.gitkeep

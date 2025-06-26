@@ -4,3 +4,5 @@ output
 env
 lora-env
 diffusers
+model
+!model/pytorch_lora_weights.safetensors
