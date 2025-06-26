@@ -4,6 +4,14 @@ This repo trains a [LoRA](https://arxiv.org/abs/2106.09685) adapter for `runwaym
 
 ---
 
+## License 
+
+https://ai.meta.com/llama/license/
+
+Licensed under the LLaMA-style Community License:
+- You may download and use these weights *only for non-commercial research purposes*.
+- Any other use (inference, commercial, distribution) requires my prior written permission.
+
 ## Project Structure
 
 ├── bin/ # Python + shell scripts for training and preview
