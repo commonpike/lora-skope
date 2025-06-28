@@ -60,7 +60,8 @@ pipe = pipe.to(device)
 # ----------------------------------------------------------------------------------
 # 2.  Generate images
 # ----------------------------------------------------------------------------------
-prompt      = f"<stdio.pike> <skope> abstract image ({prompt}:{1/restyle})"
+prompt_add  = "" # "abstract image"
+prompt      = f"<skope> {prompt_add} ({prompt}:{1/restyle})"
 print("prompt:" + prompt)
 
 os.makedirs(output_folder, exist_ok=True)
@@ -76,7 +77,7 @@ for _ in range(groups):
             guidance_scale=guide,
             height=size,
             width=size,
-            #generator=generator
+            generator=generator
         ).images[0]
 
         filename = stamp+"-"+str(i)+".png"

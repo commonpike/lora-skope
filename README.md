@@ -58,7 +58,8 @@ bin/train.sh
 
 ```
 source lora-env/bin/activate
-python3 bin/generate.py
+python3 bin/generate.py "some prompt"
+python3 bin/img2img.py "/home/Desktop/some-image.jpg"
 ```
 
 ### Notes
