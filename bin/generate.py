@@ -70,17 +70,18 @@ for _ in range(groups):
     # image = pipe(prompt).images[0]
     seed = int(time.time()) 
     stamp = f"skope_{uuid.uuid4().hex}"
-    for i in range(amount):
-        generator = torch.Generator(device).manual_seed(seed + i)
-        image = pipe(
-            prompt, 
-            guidance_scale=guide,
-            height=size,
-            width=size,
-            generator=generator
-        ).images[0]
-
-        filename = stamp+"-"+str(i)+".png"
+    #for i in range(amount):
+    generator = torch.Generator(device).manual_seed(seed)
+    images = pipe(
+        prompt, 
+        num_images_per_prompt=amount,
+        guidance_scale=guide,
+        height=size,
+        width=size,
+        generator=generator
+    ).images
+    for idx, image in enumerate(images):
+        filename = stamp+"-"+str(idx)+".png"
         filepath = os.path.join(output_folder, filename)
 
         image.save(filepath)

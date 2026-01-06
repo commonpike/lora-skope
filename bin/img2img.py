@@ -77,7 +77,7 @@ for i in range(amount):
     generator = torch.Generator(device).manual_seed(seed + i)
     
     # Run img2img
-    result = pipe(
+    image = pipe(
         prompt=prompt,
         image=input_image,
         height=size,
