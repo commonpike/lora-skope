@@ -1,52 +1,40 @@
 import subprocess
 import re
+import time  # optional, for a short delay between runs
 
-def get_word():
-    result = subprocess.run(
-        ["python3", "get_random_word.py"],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    return result.stdout.strip()
+def run_script(script_path, *args, capture=False):
+    cmd = ["python3", script_path] + list(args)
 
-def run_script(script_name, word):
-    result = subprocess.run(
-        ["python3", script_name, word],
-        check=True,
-    )
-    return result.stdout.strip()
+    if capture:
+        result = subprocess.run(cmd, check=True, text=True, capture_output=True)
+        return result.stdout.strip()
+    else:
+        subprocess.run(cmd, check=True, text=True, stdout=None, stderr=None)
+        return None
 
-def main():
-    words = run_script("get_random_words.py").strip()
-    print(f"Random words: {words}")
+def process_pipeline():
+    # Get random words
+    words = run_script("bin/get_random_words.py", capture=True)
+    print(f"\nRandom words: {words}")
 
-    # clean, stable slug
     slug = re.sub(r"[^a-z]+", "-", words.lower()).strip("-")
 
-    run_script(
-        "bin/generate.py",
-        words,
-        f"--destination={slug}-input",
-    )
+    # Run your scripts live
+    run_script("bin/generate.py", words, f"--destination={slug}-input")
+    run_script("bin/img2img.py", f"output/{slug}-input.png", f"--destination={slug}-001")
+    time.sleep(60)
+    run_script("bin/img2img.py", f"output/{slug}-001.png", f"--destination={slug}-002")
+    time.sleep(60)
+    run_script("bin/img2img.py", f"output/{slug}-002.png", f"--destination={slug}-003")
+    time.sleep(60)
 
-    run_script(
-        "bin/img2img.py",
-        f"{slug}-input.png",
-        f"--destination={slug}-001",
-    )
+def main():
+    print("Starting endless pipeline. Press Ctrl+C to stop.")
+    try:
+        while True:
+            process_pipeline()
+    except KeyboardInterrupt:
+        print("\nPipeline stopped by user.")
 
-    run_script(
-        "bin/img2img.py",
-        f"{slug}-001.png",
-        f"--destination={slug}-002",
-    )
-
-    run_script(
-        "bin/img2img.py",
-        f"{slug}-002.png",
-        f"--destination={slug}-003",
-    )
-    
 if __name__ == "__main__":
     main()
