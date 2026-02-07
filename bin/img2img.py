@@ -12,6 +12,7 @@ parser.add_argument("--steps", type=float, default=20, help="num inference steps
 parser.add_argument("--blur", type=int, default=1, help="blur the input")
 parser.add_argument("--guide", type=int, default=12, help="quality guidance")
 parser.add_argument("--force", type=bool, default=True, help="prepare to crash")
+parser.add_argument("--destination", type=str, default="", help="destination filename, excluding extension")
 
 args = parser.parse_args()
 
@@ -23,6 +24,7 @@ amount = args.amount
 guide = args.guide
 force = args.force
 steps = args.steps
+destination = args.destination
 
 if force:
     # disable checks on the gpu - may crash your machine
@@ -72,7 +74,9 @@ input_image = input_image.resize((size, size))
 prompt = "<skope>"
 
 seed = int(time.time()) 
-stamp = f"skope_{uuid.uuid4().hex}"
+if not destination:
+    destination = f"skope_{uuid.uuid4().hex}"
+
 for i in range(amount):
     generator = torch.Generator(device).manual_seed(seed + i)
     
@@ -87,7 +91,10 @@ for i in range(amount):
         num_inference_steps=steps, #25
         generator=generator
     ).images[0]
-    filename = stamp+"-"+str(i)+".png"
+    if i == 0:
+        filename = destination+".png"
+    else:
+        filename = destination+"-"+str(i)+".png"
     filepath = os.path.join(output_folder, filename)
 
     image.save(filepath)

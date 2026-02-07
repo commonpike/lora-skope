@@ -10,6 +10,7 @@ parser.add_argument("--amount", type=int, default=1, help="number of images per 
 parser.add_argument("--guide", type=int, default=12, help="quality guidance")
 parser.add_argument("--force", type=bool, default=True, help="prepare to crash")
 parser.add_argument("--restyle", type=float, default=1.0, help="factor of custom restyling")
+parser.add_argument("--destination", type=str, default="", help="destination filename, excluding extension")
 
 args = parser.parse_args()
 
@@ -20,6 +21,7 @@ amount = args.amount
 guide = args.guide
 force = args.force
 restyle = args.restyle
+destination = args.destination
 
 if force:
     # disable checks on the gpu - may crash your machine
@@ -69,7 +71,8 @@ os.makedirs(output_folder, exist_ok=True)
 for _ in range(groups):
     # image = pipe(prompt).images[0]
     seed = int(time.time()) 
-    stamp = f"skope_{uuid.uuid4().hex}"
+    if not destination:
+        destination = f"skope_{uuid.uuid4().hex}"
     #for i in range(amount):
     generator = torch.Generator(device).manual_seed(seed)
     images = pipe(
@@ -81,7 +84,10 @@ for _ in range(groups):
         generator=generator
     ).images
     for idx, image in enumerate(images):
-        filename = stamp+"-"+str(idx)+".png"
+        if idx == 0:
+            filename = destination+".png"
+        else:
+            filename = destination+"-"+str(idx)+".png"
         filepath = os.path.join(output_folder, filename)
 
         image.save(filepath)
