@@ -96,7 +96,7 @@ for i in range(amount):
     else:
         filename = destination+"-"+str(i)+".png"
     filepath = os.path.join(output_folder, filename)
-
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
     image.save(filepath)
     print(f"Saved {filepath}")
 

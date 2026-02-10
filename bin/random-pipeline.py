@@ -1,6 +1,9 @@
+import os
 import subprocess
 import re
 import time  # optional, for a short delay between runs
+from wonderwords import RandomWord
+from datetime import datetime
 
 def run_script(script_path, *args, capture=False):
     cmd = ["python3", script_path] + list(args)
@@ -13,20 +16,37 @@ def run_script(script_path, *args, capture=False):
         return None
 
 def process_pipeline():
-    # Get random words
-    words = run_script("bin/get_random_words.py", capture=True)
-    print(f"\nRandom words: {words}")
+    # get date
+    # current date
+    today = datetime.today()
 
+    # format as YYYYMMDD
+    yyyymmdd = today.strftime("%Y%m%d")
+
+    # Get random words
+    rw = RandomWord()
+    words_array = rw.random_words(2)
+    words = " ".join(words_array)
     slug = re.sub(r"[^a-z]+", "-", words.lower()).strip("-")
 
+    # make dir and write body 
+    os.makedirs(f"output/{yyyymmdd}-{slug}", exist_ok=True)
+    with open(f"output/{yyyymmdd}-{slug}/body.txt", "w") as body:
+        body.write(f"{words.title()}\n\n#cgi #skope #blender #stable-diffusion")
+
+    print("words:" + words)
+    print("output:" + f"{yyyymmdd}-{slug}")
+
     # Run your scripts live
-    run_script("bin/generate.py", words, f"--destination={slug}-input")
-    run_script("bin/img2img.py", f"output/{slug}-input.png", f"--destination={slug}-001")
-    time.sleep(60)
-    run_script("bin/img2img.py", f"output/{slug}-001.png", f"--destination={slug}-002")
-    time.sleep(60)
-    run_script("bin/img2img.py", f"output/{slug}-002.png", f"--destination={slug}-003")
-    time.sleep(60)
+    for name in [slug+"-001",slug+"-002",slug+"-003",slug+"-004"]:
+        run_script("bin/generate.py", words, "--skope=1.0", f"--destination={yyyymmdd}-{slug}/_{name}-org")
+        time.sleep(60)
+        run_script("bin/img2img.py", f"output/{yyyymmdd}-{slug}/_{name}-org.png", f"--destination={yyyymmdd}-{slug}/_{name}-A")
+        time.sleep(60)
+        run_script("bin/img2img.py", f"output/{yyyymmdd}-{slug}/_{name}-A.png", f"--destination={yyyymmdd}-{slug}/_{name}-B")
+        time.sleep(60)
+        run_script("bin/img2img.py", f"output/{yyyymmdd}-{slug}/_{name}-B.png", f"--destination={yyyymmdd}-{slug}/{name}")
+        time.sleep(60)
 
 def main():
     print("Starting endless pipeline. Press Ctrl+C to stop.")

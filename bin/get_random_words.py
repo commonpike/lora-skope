@@ -5,7 +5,7 @@ import re
 def get_random_word():
     r = requests.get(
         "https://random-word-api.herokuapp.com/word?number=2",
-        timeout=5,
+        timeout=60,
     )
     r.raise_for_status()
     json = r.json()

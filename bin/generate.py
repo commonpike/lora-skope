@@ -9,7 +9,7 @@ parser.add_argument("--groups", type=int, default=1, help="number of groups")
 parser.add_argument("--amount", type=int, default=1, help="number of images per group")
 parser.add_argument("--guide", type=int, default=12, help="quality guidance")
 parser.add_argument("--force", type=bool, default=True, help="prepare to crash")
-parser.add_argument("--restyle", type=float, default=1.0, help="factor of custom restyling")
+parser.add_argument("--skope", type=float, default=1.0, help="factor of skope restyling")
 parser.add_argument("--destination", type=str, default="", help="destination filename, excluding extension")
 
 args = parser.parse_args()
@@ -20,7 +20,7 @@ groups = args.groups
 amount = args.amount
 guide = args.guide
 force = args.force
-restyle = args.restyle
+skope = args.skope
 destination = args.destination
 
 if force:
@@ -62,8 +62,12 @@ pipe = pipe.to(device)
 # ----------------------------------------------------------------------------------
 # 2.  Generate images
 # ----------------------------------------------------------------------------------
-prompt_add  = "" # "abstract image"
-prompt      = f"<skope> {prompt_add} ({prompt}:{1/restyle})"
+prompt_add  = "" # possible hardcoded add, eg "abstract image"
+if skope <= 0.05:
+    prompt = f"{prompt_add} {prompt}"
+else:
+    prompt = f"<skope> {prompt_add} {prompt}"
+
 print("prompt:" + prompt)
 
 os.makedirs(output_folder, exist_ok=True)
@@ -81,7 +85,8 @@ for _ in range(groups):
         guidance_scale=guide,
         height=size,
         width=size,
-        generator=generator
+        generator=generator,
+        cross_attention_kwargs={"scale": skope}
     ).images
     for idx, image in enumerate(images):
         if idx == 0:
@@ -89,6 +94,6 @@ for _ in range(groups):
         else:
             filename = destination+"-"+str(idx)+".png"
         filepath = os.path.join(output_folder, filename)
-
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
         image.save(filepath)
         print(f"Saved {filepath}")
