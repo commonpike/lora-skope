@@ -6,5 +6,5 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 fi
 
 
-cd `dirname $0`/..
+cd `dirname $0`
 source lora-env/bin/activate 
