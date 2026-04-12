@@ -62,6 +62,8 @@ pipe.load_lora_weights(model_folder, weight_name="pytorch_lora_weights.safetenso
 
 # speed up 
 pipe.enable_attention_slicing()
+pipe.enable_vae_slicing() #opt
+#pipe.enable_xformers_memory_efficient_attention() #if installed
 
 # (Optional) fuse LoRA if you want performance (skip if unsure)
 pipe.fuse_lora()

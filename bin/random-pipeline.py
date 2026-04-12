@@ -39,13 +39,30 @@ def process_pipeline():
 
     # Run your scripts live
     for name in [slug+"-001",slug+"-002",slug+"-003",slug+"-004"]:
-        run_script("bin/generate.py", words, "--skope=1.0", f"--destination={yyyymmdd}-{slug}/_{name}-org")
+        run_script(
+            "bin/generate.py", words, "--skope=1.0", 
+            f"--destination={yyyymmdd}-{slug}/_{name}-org"
+        )
         time.sleep(60)
-        run_script("bin/img2img.py", f"output/{yyyymmdd}-{slug}/_{name}-org.png", f"--destination={yyyymmdd}-{slug}/_{name}-A")
+        run_script(
+            "bin/img2img.py", 
+            f"output/{yyyymmdd}-{slug}/_{name}-org.png", 
+            f"--destination={yyyymmdd}-{slug}/_{name}-A"
+        )
         time.sleep(60)
-        run_script("bin/img2img.py", f"output/{yyyymmdd}-{slug}/_{name}-A.png", f"--destination={yyyymmdd}-{slug}/_{name}-B")
+        run_script(
+            "bin/img2img.py", 
+            f"output/{yyyymmdd}-{slug}/_{name}-A.png", 
+            f"--destination={yyyymmdd}-{slug}/_{name}-B", 
+            #"--size=1024", "--strength=.25"
+        )
         time.sleep(60)
-        run_script("bin/img2img.py", f"output/{yyyymmdd}-{slug}/_{name}-B.png", f"--destination={yyyymmdd}-{slug}/{name}")
+        run_script(
+            "bin/img2img.py", 
+            f"output/{yyyymmdd}-{slug}/_{name}-B.png", 
+            f"--destination={yyyymmdd}-{slug}/{name}", 
+            #"--size=2048", "--strength=.10"
+        )
         time.sleep(60)
 
 def main():
